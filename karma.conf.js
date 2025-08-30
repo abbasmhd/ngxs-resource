@@ -7,7 +7,7 @@ module.exports = function (config) {
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
-      require('karma-chrome-launcher'),
+      require('karma-firefox-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
       require('@angular-devkit/build-angular/plugins/karma')
@@ -35,8 +35,23 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['FirefoxHeadless'],
     singleRun: false,
-    restartOnFileChange: true
+    restartOnFileChange: true,
+    customLaunchers: {
+      FirefoxHeadless: {
+        base: 'Firefox',
+        flags: [
+          '--headless',
+          '--width=1920',
+          '--height=1080'
+        ]
+      }
+    },
+    files: [
+      'projects/ngxs-labs-resource/src/test-setup.ts',
+      'projects/ngxs-labs-resource/src/test.ts',
+      'projects/ngxs-labs-resource/src/**/*.spec.ts'
+    ]
   });
 };

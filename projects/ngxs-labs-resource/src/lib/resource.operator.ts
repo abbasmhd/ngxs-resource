@@ -14,143 +14,125 @@ export class ResourceOperator {
   /**
    * Creates a resource operator for NGXS actions with manual state management
    * @param options Resource configuration options
-   * @returns Observable that can be returned from NGXS actions
+   * @returns Function that takes StateContext and returns Observable
    */
   static ngxsResource<T extends ResourceState, R = any>(
     options: ResourceOptions<T, R>
-  ): Observable<R> {
-    return new Observable(observer => {
-      const {
-        service,
-        success,
-        error,
-        start,
-        complete,
-        errorTransform,
-        loadingKey = 'loading',
-        errorKey = 'error'
-      } = options;
+  ): (ctx: StateContext<T>) => Observable<R> {
+    const {
+      service,
+      success,
+      error,
+      start,
+      complete,
+      errorTransform,
+      loadingKey = 'loading',
+      errorKey = 'error'
+    } = options;
 
-      // Create a context wrapper for the operator
-      let context: StateContext<T> | null = null;
+    return (ctx: StateContext<T>): Observable<R> => {
+      // Execute start callback
+      if (start) {
+        start(ctx);
+      } else {
+        // Default loading state management
+        ctx.patchState({ [loadingKey]: true, [errorKey]: null } as any);
+      }
 
-      const setContext = (ctx: StateContext<T>) => {
-        context = ctx;
-      };
-
-      const executeResource = (ctx: StateContext<T>): Observable<R> => {
-        setContext(ctx);
-        
-        // Execute start callback
-        if (start) {
-          start(ctx);
-        } else {
-          // Default loading state management
-          ctx.patchState({ [loadingKey]: true, [errorKey]: null } as any);
-        }
-
-        return service.pipe(
-          tap((result: R) => {
-            // Execute success callback
-            if (success) {
-              success(result, ctx);
-            } else {
-              // Default success state management
-              ctx.patchState({ [loadingKey]: false, [errorKey]: null } as any);
-            }
-          }),
-          catchError((err: any) => {
-            const transformedError = errorTransform ? errorTransform(err) : err;
-            
-            // Execute error callback
-            if (error) {
-              error(transformedError, ctx);
-            } else {
-              // Default error state management
-              ctx.patchState({ 
-                [loadingKey]: false, 
-                [errorKey]: transformedError 
-              } as any);
-            }
-            
-            return throwError(() => transformedError);
-          }),
-          finalize(() => {
-            // Execute complete callback
-            if (complete) {
-              complete(ctx);
-            }
-          })
-        );
-      };
-
-      // Return the operator function
-      return executeResource;
-    });
+      return service.pipe(
+        tap((result: R) => {
+          // Execute success callback
+          if (success) {
+            success(result, ctx);
+          } else {
+            // Default success state management
+            ctx.patchState({ [loadingKey]: false, [errorKey]: null } as any);
+          }
+        }),
+        catchError((err: any) => {
+          const transformedError = errorTransform ? errorTransform(err) : err;
+          
+          // Execute error callback
+          if (error) {
+            error(transformedError, ctx);
+          } else {
+            // Default error state management
+            ctx.patchState({ 
+              [loadingKey]: false, 
+              [errorKey]: transformedError 
+            } as any);
+          }
+          
+          return throwError(() => transformedError);
+        }),
+        finalize(() => {
+          // Execute complete callback
+          if (complete) {
+            complete(ctx);
+          }
+        })
+      );
+    };
   }
 
   /**
    * Creates a resource operator with automatic state management
    * @param options Resource configuration options
-   * @returns Observable that can be returned from NGXS actions
+   * @returns Function that takes StateContext and returns Observable
    */
   static ngxsResourceAuto<T extends ResourceState, R = any>(
     options: ResourceOptions<T, R>
-  ): Observable<R> {
-    return new Observable(observer => {
-      const {
-        service,
-        success,
-        error,
-        start,
-        complete,
-        errorTransform,
-        loadingKey = 'loading',
-        errorKey = 'error'
-      } = options;
+  ): (ctx: StateContext<T>) => Observable<R> {
+    const {
+      service,
+      success,
+      error,
+      start,
+      complete,
+      errorTransform,
+      loadingKey = 'loading',
+      errorKey = 'error'
+    } = options;
 
-      const executeResource = (ctx: StateContext<T>): Observable<R> => {
-        // Execute start callback or set default loading state
-        if (start) {
-          start(ctx);
-        } else {
-          ctx.patchState({ [loadingKey]: true, [errorKey]: null } as any);
-        }
+    return (ctx: StateContext<T>): Observable<R> => {
+      // Execute start callback or set default loading state
+      if (start) {
+        start(ctx);
+      } else {
+        ctx.patchState({ [loadingKey]: true, [errorKey]: null } as any);
+      }
 
-        return service.pipe(
-          tap((result: R) => {
-            // Execute success callback or set default success state
-            if (success) {
-              success(result, ctx);
-            } else {
-              ctx.patchState({ [loadingKey]: false, [errorKey]: null } as any);
-            }
-          }),
-          catchError((err: any) => {
-            const transformedError = errorTransform ? errorTransform(err) : err;
-            
-            // Execute error callback or set default error state
-            if (error) {
-              error(transformedError, ctx);
-            } else {
-              ctx.patchState({ 
-                [loadingKey]: false, 
-                [errorKey]: transformedError 
-              } as any);
-            }
-            
-            return throwError(() => transformedError);
-          }),
-          finalize(() => {
-            if (complete) {
-              complete(ctx);
-            }
-          })
-        );
-      };
-
-      return executeResource;
-    });
+      return service.pipe(
+        tap((result: R) => {
+          // Execute success callback or set default success state
+          if (success) {
+            success(result, ctx);
+          } else {
+            ctx.patchState({ [loadingKey]: false, [errorKey]: null } as any);
+          }
+        }),
+        catchError((err: any) => {
+          const transformedError = errorTransform ? errorTransform(err) : err;
+          
+          // Execute error callback or set default error state
+          if (error) {
+            error(transformedError, ctx);
+          } else {
+            ctx.patchState({ 
+              [loadingKey]: false, 
+              [errorKey]: transformedError 
+            } as any);
+          }
+          
+          return throwError(() => transformedError);
+        }),
+        finalize(() => {
+          if (complete) {
+            complete(ctx);
+          }
+        })
+      );
+    };
   }
 
   /**
@@ -160,7 +142,7 @@ export class ResourceOperator {
    */
   static xsResource<T extends ResourceState, R = any>(
     options: ResourceOptions<T, R>
-  ): Observable<R> {
+  ): (ctx: StateContext<T>) => Observable<R> {
     return ResourceOperator.ngxsResource(options);
   }
 
@@ -171,7 +153,7 @@ export class ResourceOperator {
    */
   static xsResourceAuto<T extends ResourceState, R = any>(
     options: ResourceOptions<T, R>
-  ): Observable<R> {
+  ): (ctx: StateContext<T>) => Observable<R> {
     return ResourceOperator.ngxsResourceAuto(options);
   }
 }
@@ -183,7 +165,7 @@ export class ResourceOperator {
  */
 export function ngxsResource<T extends ResourceState, R = any>(
   options: ResourceOptions<T, R>
-) {
+): (ctx: StateContext<T>) => Observable<R> {
   return ResourceOperator.ngxsResource(options);
 }
 
@@ -194,7 +176,7 @@ export function ngxsResource<T extends ResourceState, R = any>(
  */
 export function ngxsResourceAuto<T extends ResourceState, R = any>(
   options: ResourceOptions<T, R>
-) {
+): (ctx: StateContext<T>) => Observable<R> {
   return ResourceOperator.ngxsResourceAuto(options);
 }
 
@@ -205,7 +187,7 @@ export function ngxsResourceAuto<T extends ResourceState, R = any>(
  */
 export function xsResource<T extends ResourceState, R = any>(
   options: ResourceOptions<T, R>
-) {
+): (ctx: StateContext<T>) => Observable<R> {
   return ResourceOperator.xsResource(options);
 }
 
@@ -216,7 +198,7 @@ export function xsResource<T extends ResourceState, R = any>(
  */
 export function xsResourceAuto<T extends ResourceState, R = any>(
   options: ResourceOptions<T, R>
-) {
+): (ctx: StateContext<T>) => Observable<R> {
   return ResourceOperator.xsResourceAuto(options);
 }
 

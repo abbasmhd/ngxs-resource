@@ -1,3 +1,4 @@
+import 'zone.js';
 import 'zone.js/testing';
 import { getTestBed } from '@angular/core/testing';
 import {
@@ -104,7 +105,19 @@ export const TestData = {
   error: new Error('Test error'),
   networkError: { status: 0, message: 'Network error' },
   serverError: { status: 500, message: 'Server error' },
-  notFoundError: { status: 404, message: 'Not found' }
+  notFoundError: { status: 404, message: 'Not found' },
+  /**
+   * Creates a simple success observable
+   */
+  createSuccessObservable<T>(data: T) {
+    return { subscribe: (observer: any) => observer.next(data) };
+  },
+  /**
+   * Creates a simple error observable
+   */
+  createErrorObservable(error: any) {
+    return { subscribe: (observer: any) => observer.error(error) };
+  }
 };
 
 // Common test configurations

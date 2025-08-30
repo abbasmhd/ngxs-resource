@@ -1,0 +1,27 @@
+
+> @ngxs-labs/resource@1.0.0 build
+> ng build ngxs-labs-resource
+
+Building Angular Package
+
+------------------------------------------------------------------------------
+Building entry point '@ngxs-labs/resource'
+------------------------------------------------------------------------------
+- Compiling with Angular sources in Ivy full compilation mode.
+✔ Compiling with Angular sources in Ivy full compilation mode.
+- Writing FESM bundles
+✔ Writing FESM bundles
+- Copying assets
+✔ Copying assets
+- Writing package manifest
+✔ Writing package manifest
+✔ Built @ngxs-labs/resource
+
+------------------------------------------------------------------------------
+Built Angular Package
+ - from: /home/mo/repos/ngxs-resource/projects/ngxs-labs-resource
+ - to:   /home/mo/repos/dist/ngxs-labs-resource
+------------------------------------------------------------------------------
+
+Build at: 2025-08-30T20:45:08.058Z - Time: 3017ms
+

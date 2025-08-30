@@ -3,5 +3,7 @@
   "dest": "../../../dist/ngxs-labs-resource",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "allowedNonPeerDependencies": ["@ngxs/store", "rxjs"]
 }
+
