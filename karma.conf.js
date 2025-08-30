@@ -7,7 +7,7 @@ module.exports = function (config) {
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
-      require('karma-firefox-launcher'),
+      require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
       require('@angular-devkit/build-angular/plugins/karma')
@@ -35,16 +35,19 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['FirefoxHeadless'],
+    // Use the regular Chrome browser so the Karma HTML reporter is visible in the UI.
+    browsers: ['Chrome'],
     singleRun: false,
     restartOnFileChange: true,
     customLaunchers: {
-      FirefoxHeadless: {
-        base: 'Firefox',
+      // Headless launcher for CI environments that don't have a display.
+      ChromeHeadless: {
+        base: 'Chrome',
         flags: [
           '--headless',
-          '--width=1920',
-          '--height=1080'
+          '--no-sandbox',
+          '--disable-gpu',
+          '--window-size=1920,1080'
         ]
       }
     },
