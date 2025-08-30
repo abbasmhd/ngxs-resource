@@ -47,11 +47,6 @@ module.exports = function (config) {
           '--height=1080'
         ]
       }
-    },
-    files: [
-      'projects/ngxs-labs-resource/src/test-setup.ts',
-      'projects/ngxs-labs-resource/src/test.ts',
-      'projects/ngxs-labs-resource/src/**/*.spec.ts'
-    ]
+    }
   });
 };

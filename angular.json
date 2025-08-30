@@ -31,7 +31,8 @@
             "polyfills": [
               "zone.js",
               "zone.js/testing"
-            ]
+            ],
+            "main": "projects/ngxs-labs-resource/src/test-setup.ts"
           }
         },
         "lint": {
