@@ -1,0 +1,49 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "ngxs-labs-resource": {
+      "projectType": "library",
+      "root": "projects/ngxs-labs-resource",
+      "sourceRoot": "projects/ngxs-labs-resource/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/ngxs-labs-resource/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngxs-labs-resource/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ngxs-labs-resource/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/ngxs-labs-resource/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ngxs-labs-resource/**/*.ts",
+              "projects/ngxs-labs-resource/**/*.html"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
