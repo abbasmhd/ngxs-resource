@@ -11,7 +11,7 @@
   "metadata": "ngxs-labs-resource.metadata.json",
   "sideEffects": false,
   "dependencies": {
-    "@ngxs/store": "^18.0.0",
+    "@ngxs/store": "^22.0.0",
     "rxjs": "^7.0.0"
   },
   "peerDependencies": {
